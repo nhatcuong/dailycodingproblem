@@ -23,19 +23,28 @@ func CountWords(input string, allCharacters []string) int {
 	if isStringEncodedCharacter(input[:2], allCharacters) {
 		wordCountStarted2DigitChar = CountWords(input[2:], allCharacters)
 	}
-	wordCountStarted1DigitChar = CountWords(input[1:], allCharacters)
+	if isStringEncodedCharacter(input[:1], allCharacters) {
+		wordCountStarted1DigitChar = CountWords(input[1:], allCharacters)
+	}
 	return wordCountStarted1DigitChar + wordCountStarted2DigitChar
 }
 
 func countWordsLength1(input string, allCharacters []string) int {
-	return 1
+	if isStringEncodedCharacter(input, allCharacters) {
+		return 1
+	}
+	return 0
 }
 
 func countWordsLength2(input string, allCharacters []string) int {
+	result := 0
 	if isStringEncodedCharacter(input, allCharacters) {
-		return 2
+		result += 1
 	}
-	return 1
+	if isStringEncodedCharacter(input[0:0], allCharacters) {
+		result += 1
+	}
+	return result
 }
 
 func isStringEncodedCharacter(input string, allCharacters []string) bool {
@@ -54,5 +63,5 @@ func main() {
 	}
 	fmt.Println(allCharacters)
 	fmt.Println("Result:")
-	fmt.Println(CountWords("13526541981312", allCharacters))
+	fmt.Println(CountWords("100", allCharacters))
 }
