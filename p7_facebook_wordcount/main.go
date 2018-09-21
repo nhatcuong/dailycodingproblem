@@ -10,23 +10,33 @@ import (
 	"strconv"
 )
 
-func CountWords(input string, allCharacters []string) int {
-	if len(input) == 1 {
-		return countWordsLength1(input, allCharacters)
+func CountWords(input string, fromIndex int, cachedResult *map[int]int, allCharacters []string) int {
+	if result, ok := (*cachedResult)[fromIndex]; ok {
+		return result
 	}
-	if len(input) == 2 {
-		return countWordsLength2(input, allCharacters)
+
+	if len(input)-fromIndex == 1 {
+		result := countWordsLength1(input[fromIndex:], allCharacters)
+		(*cachedResult)[fromIndex] = result
+		return result
+	}
+	if len(input)-fromIndex == 2 {
+		result := countWordsLength2(input[fromIndex:], allCharacters)
+		(*cachedResult)[fromIndex] = result
+		return result
 	}
 
 	wordCountStarted2DigitChar := 0
 	wordCountStarted1DigitChar := 0
-	if isStringEncodedCharacter(input[:2], allCharacters) {
-		wordCountStarted2DigitChar = CountWords(input[2:], allCharacters)
+	if isStringEncodedCharacter(input[fromIndex:fromIndex+2], allCharacters) {
+		wordCountStarted2DigitChar = CountWords(input, fromIndex+2, cachedResult, allCharacters)
 	}
-	if isStringEncodedCharacter(input[:1], allCharacters) {
-		wordCountStarted1DigitChar = CountWords(input[1:], allCharacters)
+	if isStringEncodedCharacter(input[fromIndex:fromIndex+1], allCharacters) {
+		wordCountStarted1DigitChar = CountWords(input, fromIndex+1, cachedResult, allCharacters)
 	}
-	return wordCountStarted1DigitChar + wordCountStarted2DigitChar
+	result := wordCountStarted1DigitChar + wordCountStarted2DigitChar
+	(*cachedResult)[fromIndex] = result
+	return result
 }
 
 func countWordsLength1(input string, allCharacters []string) int {
@@ -41,7 +51,7 @@ func countWordsLength2(input string, allCharacters []string) int {
 	if isStringEncodedCharacter(input, allCharacters) {
 		result += 1
 	}
-	if isStringEncodedCharacter(input[0:0], allCharacters) {
+	if isStringEncodedCharacter(input[:1], allCharacters) {
 		result += 1
 	}
 	return result
@@ -61,7 +71,8 @@ func main() {
 	for i := 0; i < 26; i++ {
 		allCharacters[i] = strconv.Itoa(i + 1)
 	}
+	cachedResult := make(map[int]int, 0)
 	fmt.Println(allCharacters)
 	fmt.Println("Result:")
-	fmt.Println(CountWords("100", allCharacters))
+	fmt.Println(CountWords("11011", 0, &cachedResult, allCharacters))
 }
