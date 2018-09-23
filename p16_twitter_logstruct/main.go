@@ -4,6 +4,8 @@
 // get_last(i): gets the ith last element from the log. i is guaranteed to be smaller than or equal to N.
 // You should be as efficient with time and space as possible.
 
+// This solution here is linear in space all the time, constant in time when record and linear in time when query
+
 package main
 
 import "fmt"
