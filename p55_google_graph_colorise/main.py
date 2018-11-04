@@ -46,7 +46,6 @@ def _get_possible_next_vertex(adjacent_matrix, colorization_matrix):
 
 
 def _get_possible_next_colors(adjacent_matrix, colorization, vertex_i, vertex_j, colors_count):
-    # Todo
     all_colors = {k+1 for k in range(colors_count)}
     adjacent_vertex_i_colors = {
         colorization[vertex_i][j] for j in range(vertex_i+1, len(adjacent_matrix))
